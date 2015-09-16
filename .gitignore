@@ -41,3 +41,21 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+##############
+##Android
+##############
+res/
+default.properties
+proguard.cfg
+*.iml
+*.bin
+.gradle
+.idea
+gradle/
+gradlew
+gradlew.bat
+settings.gradle
+/app/build/intermediates
+/app/build/outputs
+local.properties
