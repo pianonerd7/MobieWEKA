@@ -59,3 +59,4 @@ settings.gradle
 /app/build/intermediates
 /app/build/outputs
 local.properties
+build/intermediates/dex-cache/cache.xml
