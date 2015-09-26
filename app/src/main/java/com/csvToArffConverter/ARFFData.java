@@ -1,12 +1,6 @@
 package csvToArffConverter;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -16,6 +10,10 @@ public class ARFFData {
 	private String[] attributes;
 	private List<String[]> data;
 	
+	/**
+	 * make a new arff data from the parsed csv values
+	 * @param csv
+	 */
 	public ARFFData(List<String[]> csv){
 		this.attributes = csv.get(0);
 		data = new ArrayList<String[]>(csv.size());
@@ -24,14 +22,67 @@ public class ARFFData {
 		}
 	}
 	
-	public void deleteAttribute (String attribute){
-		int attributeIndex = -1;
-		for (int i = 0; i<attributes.length; i++){
-			if (attribute.equals(attributes[i])){
-				attributeIndex = i;
-				break;
-			}
+	/**
+	 * make a new arff data from existing attributes and rows
+	 */
+	public ARFFData (String[] attributes, List<String[]> data){
+		this.attributes = attributes;
+		this.data = data;
+	}
+	
+	//stuff about splitting two labels into train and test data
+	/**
+	 * 1. update attribute string[] 
+	 * 		1a. resizing the array
+	 * 		1b. adding nominal thingy for label
+	 * 2. update the string[] inside data list (2a. resizing the array)
+	 * 3. add values inside the new column (label A or label T)
+	 * @param attribute
+	 */
+	public void insertAttributeToEnd (String attribute, String label){
+		this.attributes = addColumnToEnd(attributes, attribute);
+		for (int i = 0; i<data.size(); i++){
+			data.set(i, addColumnToEnd(data.get(i), label));
 		}
+	}
+	
+	/**
+	 * 35/15
+	 * 1. attribute stays the same
+	 * 2. this arffData gets 35 rows of data (which is the train data)
+	 * 3. return an arffData that has rest of the data (which is the test data)
+	 * @param numRows
+	 */
+	public ARFFData splitData (int numRows){
+		List<String[]> newData = new ArrayList<String[]>();
+		List<String[]> splitData = new ArrayList<String[]>();
+		if (data.size()<numRows){
+			System.out.println("not enough data");
+			return null;
+		}
+		int index = 0;
+		int count = 0;
+		while (count<numRows){
+			newData.add(data.get(index));
+			index++;
+			count = Integer.parseInt(data.get(index)[data.get(index).length-2]); //this is where counter is at
+		}
+		
+		for (int i =index; i<data.size(); i++){
+			splitData.add(data.get(i));
+		}
+		this.data = newData;
+		return new ARFFData(attributes, splitData);
+	}
+	
+	public void combineData (ARFFData arffToCombine){
+		for (String[] row : arffToCombine.getData()){
+			data.add(row);
+		}
+	}
+	
+	public void deleteAttribute (String attribute){
+		int attributeIndex = searchColumn(attribute);
 		if (attributeIndex == -1){
 			//attribute not found
 			return;
@@ -42,54 +93,8 @@ public class ARFFData {
 		}
 	}
 	
-	public void getARFF(File file){
-		BufferedWriter bw = null;
-		
-		String attributeTag = "@attribute";
-		
-		try {
-			bw=new BufferedWriter(new FileWriter(file));
-			bw.append("@relation sensorAndMotion");
-			bw.newLine();
-			bw.newLine();
-			
-			for (int i = 0; i < attributes.length-1; i++) {
-				bw.append(String.format("%s %s numeric", attributeTag, attributes[i]));
-				bw.newLine();
-			}
-			
-			String counterNominal = formatRatchetNominal();
-			bw.append(String.format("%s %s %s", attributeTag, attributes[attributes.length-1], counterNominal));
-			
-			bw.newLine();
-			bw.newLine();
-			
-			bw.append("@data");
-			bw.newLine();
-			
-			for (String[] dataRow : data) {
-				for (int i = 0; i < dataRow.length-1; i++) {
-					bw.append(dataRow[i]);
-					bw.append(",");
-				}
-				bw.append(dataRow[dataRow.length-1]);
-				bw.newLine();
-			}
-		}
-		catch(Exception e) {
-			System.out.println(e.getMessage());
-		}
-		finally {
-			try {
-				bw.close();
-			}
-			catch(IOException e) {
-				System.out.println(e.getMessage());
-			}
-		}
-	}
-	
-	private String formatRatchetNominal() {
+	//deprecated
+	String formatRatchetNominal() {
 		String[] lastRow  = data.get(data.size()-1);
 		int counter = Integer.parseInt(lastRow[lastRow.length-1]);
 		
@@ -107,6 +112,40 @@ public class ARFFData {
 		return sb.toString();
 	}
 	
+	String formatNominal(String attributeName) {
+		int columnIndex = searchColumn(attributeName);
+		Set<String> set = new TreeSet<String>();
+		for (int i = 0; i<data.size(); i++){
+			String[] dataArr = data.get(i);
+			set.add(dataArr[columnIndex]);
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		
+		String[] nominalSet = set.toArray(new String[1]);
+		for (int i = 0; i<nominalSet.length; i++){
+			sb.append(nominalSet[i]);
+			if (i+1<nominalSet.length){
+				sb.append(",");
+			}
+		}
+		sb.append("}");
+		
+		return sb.toString();
+	}
+	
+	//formatLabel
+	
+	private int searchColumn (String attribute){
+		for (int i = 0; i<attributes.length; i++){
+			if (attribute.equals(attributes[i])){
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	/**
 	 * @return the attributes
 	 */
@@ -120,7 +159,16 @@ public class ARFFData {
 	public List<String[]> getData() {
 		return data;
 	}
-
+	
+	private String[] addColumnToEnd (String[] row, String data){
+		String[] newRow = new String[row.length+1];
+		for (int i = 0; i<row.length; i++){
+			newRow[i] = row[i];
+		}
+		newRow[newRow.length-1] = data;
+		return newRow;
+	}
+	
 	private String[] removeColumn (String[] row, int column){
 		String[] newRow = new String[row.length-1];
 		int j = 0;
