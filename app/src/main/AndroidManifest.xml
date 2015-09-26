@@ -15,7 +15,8 @@
         </activity>
 		<activity android:name="MainMenu"></activity>
 		<activity android:name="BuildClassifier"></activity>
-		<activity android:name="BuildClusterer"></activity>   
-		<activity android:name="BuildAssociate"></activity>   
+		<activity android:name="BuildClusterer"></activity>
+		<activity android:name="BuildAssociate"></activity>
+        <activity android:name="ARFFConverter"></activity>
 </application>
 </manifest>
