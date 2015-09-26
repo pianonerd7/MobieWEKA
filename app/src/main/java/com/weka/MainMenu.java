@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainMenu extends Activity{
 	
-	private Button classifier, clusterer, associate, exit;
+	private Button classifier, clusterer, associate, exit, convertTOArff;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -27,6 +28,7 @@ public class MainMenu extends Activity{
     	clusterer = (Button)findViewById(R.id.clusterer_button);
     	associate = (Button)findViewById(R.id.associate_button);  	
     	exit = (Button)findViewById(R.id.exit_button);
+        convertTOArff = (Button)findViewById(R.id.convertToArff_button);
     }
     
     public void addbuttonlistener (){
@@ -52,12 +54,17 @@ public class MainMenu extends Activity{
 					intent.addCategory(Intent.CATEGORY_HOME);
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(intent);
-				}				
+				}
 			}    		
     	};
     	classifier.setOnClickListener(listener);
     	clusterer.setOnClickListener(listener);
     	associate.setOnClickListener(listener);
     	exit.setOnClickListener(listener);
+    }
+
+    public void ConvertToARFF(View view) {
+        Intent intent = new Intent(this, ARFFConverter.class);
+        startActivity(intent);
     }
 }

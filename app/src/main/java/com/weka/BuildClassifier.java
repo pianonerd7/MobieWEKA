@@ -123,7 +123,7 @@ public class BuildClassifier extends TabActivity{
 				.setContent(R.id.classifiermodel_layout));
 		tabHost.addTab(tabHost.newTabSpec("tab3").setIndicator("Test Result")
 				.setContent(R.id.classifiertestresult_layout));
-		
+
 		tabHost.getTabWidget().getChildAt(1).setClickable(false);
 		tabHost.getTabWidget().getChildAt(2).setClickable(false);
 		final TabWidget tabWidget = tabHost.getTabWidget();		 
@@ -219,14 +219,14 @@ public class BuildClassifier extends TabActivity{
 	public void Readfile() {
     	try {
     		if (TypeFile == 0) {
-	        	File file = new File(TrainfileName);	
-	    		ArffLoader atf = new ArffLoader(); 
+	        	File file = new File(TrainfileName);
+	    		ArffLoader atf = new ArffLoader();
 				atf.setFile(file);
 				instancesTrain = atf.getDataSet();
 				TrainSummaryString = instancesTrain.toSummaryString();
     		}else if (TypeFile == 1) {
-    			File file = new File(TestfileName);	
-	    		ArffLoader atf = new ArffLoader(); 
+    			File file = new File(TestfileName);
+	    		ArffLoader atf = new ArffLoader();
 				atf.setFile(file);
 				instancesTest = atf.getDataSet();
 				TestSummaryString = instancesTest.toSummaryString();
@@ -236,8 +236,8 @@ public class BuildClassifier extends TabActivity{
 		        ois.close();
 		        isLoadModel = true;
 			}
-    		
-		} catch (IOException e) {} 
+
+		} catch (IOException e) {}
     	catch (ClassNotFoundException e) {}
     }
 	
