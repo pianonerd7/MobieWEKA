@@ -51,18 +51,18 @@ public class ARFFData {
 	 * 1. attribute stays the same
 	 * 2. this arffData gets 35 rows of data (which is the train data)
 	 * 3. return an arffData that has rest of the data (which is the test data)
-	 * @param numRows
+	 * @param numCounter
 	 */
-	public ARFFData splitData (int numRows){
+	public ARFFData splitData (int numCounter){
 		List<String[]> newData = new ArrayList<String[]>();
 		List<String[]> splitData = new ArrayList<String[]>();
-		if (data.size()<numRows){
+		if (data.size()<numCounter){
 			System.out.println("not enough data");
 			return null;
 		}
 		int index = 0;
 		int count = 0;
-		while (count<numRows){
+		while (count<numCounter){
 			newData.add(data.get(index));
 			index++;
 			count = Integer.parseInt(data.get(index)[data.get(index).length-2]); //this is where counter is at

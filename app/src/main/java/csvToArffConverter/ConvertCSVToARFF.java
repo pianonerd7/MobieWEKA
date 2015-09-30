@@ -22,7 +22,14 @@ public class ConvertCSVToARFF {
 	}
 	
 	public static List<ARFFData> convertWithStat (ARFFData arffA, ARFFData arffB){
-		final int NEW_ATTRIBUTE_COUNT = 22*2 + 2 + 1;
+		/**
+		 * 27 attributes normally.
+		 * delete timestamp and  current pattern -2
+		 * =25
+		 * don't calculate mean/stdev for x, y, and counter
+		 * 22*2=44 for mean/stdev for everything else
+		 */
+		final int NEW_ATTRIBUTE_COUNT = 47;//22*2 + 2 + 1;
 		attributePreprocessing(arffA, arffB);
 		
 		String[] newAttribute = new String[NEW_ATTRIBUTE_COUNT];
@@ -32,6 +39,11 @@ public class ConvertCSVToARFF {
 				newAttribute[newAttributeIndex] = arffA.getAttributes()[i] + "_MEAN";
 				newAttributeIndex++;
 				newAttribute[newAttributeIndex] = arffA.getAttributes()[i] + "_STANDARD_DEVIATION";
+				newAttributeIndex++;
+			}
+			else{
+				//for x,y, and counter
+				newAttribute[newAttributeIndex] = arffA.getAttributes()[i];
 				newAttributeIndex++;
 			}
 		}
