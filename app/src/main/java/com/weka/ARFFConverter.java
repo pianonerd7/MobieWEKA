@@ -38,7 +38,7 @@ public class ARFFConverter extends Activity {
                         List<ARFFData> arffDataList = ConvertCSVToARFF.convert(fileA, fileB);
                         ARFFWriter.convertToARFF(formatFile(getFileName(labelA)+"_train"+".arff"), arffDataList.get(0));
                         ARFFWriter.convertToARFF(formatFile(getFileName(labelB)+"_test"+".arff"), arffDataList.get(1));
-                        Log.d("ARFFConverter", "MY TAGS ARE ALWAYS FUCKING DECENT. btw success");
+                        Log.d("ARFFConverter", "success");
                     }
                 }
         );
@@ -50,9 +50,9 @@ public class ARFFConverter extends Activity {
                         File fileA = formatFile(labelA);
                         File fileB = formatFile(labelB);
                         List<ARFFData> arffDataList = ConvertCSVToARFF.convertWithStat(fileA, fileB);
-                        ARFFWriter.convertToARFF(formatFile(getFileName(labelA+"_train" + ".arff")), arffDataList.get(0));
-                        ARFFWriter.convertToARFF(formatFile(getFileName(labelB+"_test"+ ".arff")), arffDataList.get(1));
-                        Log.d("ARFFConverterMeanStd", "MY TAGS ARE ALWAYS FUCKING DECENT. btw success");
+                        ARFFWriter.convertToARFF(formatFile(getFileName(labelA)+"_train" + ".arff"), arffDataList.get(0));
+                        ARFFWriter.convertToARFF(formatFile(getFileName(labelB)+"_test"+ ".arff"), arffDataList.get(1));
+                        Log.d("ARFFConverterMeanStd", "success");
                     }
                 }
         );
