@@ -60,3 +60,4 @@ settings.gradle
 /app/build/outputs
 local.properties
 build/intermediates/dex-cache/cache.xml
+/bin/
